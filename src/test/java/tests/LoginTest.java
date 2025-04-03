@@ -1,24 +1,21 @@
 package tests;
+import org.junit.jupiter.api.Test;
+import pages.LoginPage;
+import utils.BaseTest;
+import utils.ConfigReader;
 
-import org.junit.jupiter.api.*;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import io.github.bonigarcia.wdm.WebDriverManager;
+public class LoginTest extends BaseTest {
 
-public class LoginTest {
-
-
-    private WebDriver driver;
-
-    @BeforeEach
-    void setUp() {
-        WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-    }
 
     @Test
-    void openBrowserTest() {
-        driver.get("https://www.google.com");
-        System.out.println("Browser aperto - lasciato aperto per debugging.");
+    void LoginTest() {
+        System.out.println("Apertura browser al sito: " + driver.getTitle());
+        String username = ConfigReader.getSelectedUser();
+        String password = ConfigReader.get("base.password");
+
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.login(username, password);
+
+        System.out.println("Login eseguito con utente: " + username);
     }
 }

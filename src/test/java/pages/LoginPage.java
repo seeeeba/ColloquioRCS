@@ -2,37 +2,33 @@ package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import utils.WaitUtils;
 
 public class LoginPage {
     private WebDriver driver;
+    private WaitUtils wait;
 
-    // Elementi della pagina di login
-    private By usernameField = By.id("username");
-    private By passwordField = By.id("password");
-    private By loginButton = By.id("loginBtn");
+    private final By usernameField = By.id("user-name");
+    private final By passwordField = By.id("password");
+    private final By loginButton = By.id("login-button");
+    private final By errorMessage = By.cssSelector("[data-test='error']");
 
-    // Costruttore
     public LoginPage(WebDriver driver) {
         this.driver = driver;
+        this.wait = new WaitUtils(driver, 10);
     }
 
-    // Azioni sulla pagina
-    public void enterUsername(String username) {
-        driver.findElement(usernameField).sendKeys(username);
-    }
-
-    public void enterPassword(String password) {
-        driver.findElement(passwordField).sendKeys(password);
-    }
-
-    public void clickLoginButton() {
-        driver.findElement(loginButton).click();
-    }
-
-    // Metodo per il login completo
     public void login(String username, String password) {
-        enterUsername(username);
-        enterPassword(password);
-        clickLoginButton();
+        wait.waitForElementVisible(usernameField).sendKeys(username);
+        wait.waitForElementVisible(passwordField).sendKeys(password);
+        wait.waitForElementClickable(loginButton).click();
+    }
+
+    public String getLoginErrorMessage() {
+        return wait.waitForElementVisible(errorMessage).getText();
+    }
+
+    public boolean isErrorVisible() {
+        return wait.waitForElementVisible(errorMessage).isDisplayed();
     }
 }
