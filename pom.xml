@@ -19,17 +19,17 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>4.9.0</version> <!-- Sostituisci con l'ultima versione -->
+            <version>4.9.0</version> <!-- Usa l'ultima versione disponibile -->
         </dependency>
 
-        <!-- WebDriver Manager per gestire automaticamente i driver (Chrome, Firefox, etc.) -->
+        <!-- WebDriver Manager per gestire automaticamente i driver -->
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
             <version>5.5.3</version>
         </dependency>
 
-        <!-- JUnit 5 per i test (opzionale, se vuoi usare JUnit) -->
+        <!-- JUnit 5 per i test -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -41,6 +41,11 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <version>5.9.3</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.9</version> <!-- o compatibile con le tue dipendenze -->
         </dependency>
     </dependencies>
 
