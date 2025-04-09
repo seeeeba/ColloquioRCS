@@ -25,6 +25,7 @@ public class InventoryPage {
     By linkedinIcon = By.className("social_linkedin");
     By addToCartButton = By.xpath("//*[contains(@id,'add-to-cart')]");
     By shoppingCartNumber = By.xpath("//span[@class='shopping_cart_badge']");
+    By shoppingCartButton = By.className("shopping_cart_link");
     By productButtons = By.cssSelector(".inventory_item button");
     By productImages = By.cssSelector(".inventory_item_img img");
 
@@ -48,8 +49,10 @@ public class InventoryPage {
         System.out.println("Icona carrello trovata.");
 
         WebElement titleElement = driver.findElement(title);
-        assertTrue(titleElement.isDisplayed(), "Titolo 'Products' non trovato!");
-        System.out.println("Titolo 'Products' trovato.");
+        assertTrue(titleElement.isDisplayed(), "Titolo non trovato!");
+        String actualTitle = titleElement.getText();
+        assertEquals("Products", actualTitle, "Non sei nella pagina del carrello!");
+        System.out.println("Titolo corretto: 'Products'.");
 
         WebElement filter = driver.findElement(filterProducts);
         assertTrue(filter.isDisplayed(), "Select filtri non trovato!");
@@ -74,15 +77,11 @@ public class InventoryPage {
         System.out.println("Pagina Products completa.");
     }
 
-    public void chromePopup() {
-        commons.waitForMilliseconds(5000);
-        driver.switchTo().alert().accept();
-    }
-
     public void addToCartAndCount() {
         List<WebElement> addToCartButtons = driver.findElements(addToCartButton);
 
         for (int i = 0; i < addToCartButtons.size(); i++) {
+            commons.waitForMilliseconds(500);
             addToCartButtons.get(i).click();
 
             WebElement cartBadge = driver.findElement(shoppingCartNumber);
@@ -91,7 +90,13 @@ public class InventoryPage {
             assertEquals(i + 1, badgeCount, "Numero nel carrello errato dopo aggiunta dell'elemento " + (i + 1));
             System.out.println("Elemento " + (i + 1) + " aggiunto correttamente. Badge: " + badgeCount);
         }
+        commons.waitForMilliseconds(500);
         System.out.println("Gli elementi vengono aggiunti correttamente al carrello.");
+    }
+
+    public void goToShoppingCart() {
+        WebElement cartButton = driver.findElement(shoppingCartButton);
+        cartButton.click();
     }
 
     public void clickAddToCartByIndex(int index) {

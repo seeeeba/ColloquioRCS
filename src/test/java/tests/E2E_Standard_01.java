@@ -14,8 +14,12 @@ public class E2E_Standard_01 extends BaseTest {
         System.out.println("Atterrato correttamente nella sezione Inventory");
 
         inventoryPage.checkProductsPage();
-        inventoryPage.chromePopup();
+
         inventoryPage.addToCartAndCount();
+
+        inventoryPage.goToShoppingCart();
+
+        shoppingCartPage.checkCartPage();
 
 
     }

@@ -15,21 +15,18 @@
     </properties>
 
     <dependencies>
-        <!-- Selenium WebDriver -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>4.9.0</version> <!-- Usa l'ultima versione disponibile -->
         </dependency>
 
-        <!-- WebDriver Manager per gestire automaticamente i driver -->
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
             <version>5.5.3</version>
         </dependency>
 
-        <!-- JUnit 5 per i test -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -45,7 +42,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>2.0.9</version> <!-- o compatibile con le tue dipendenze -->
+            <version>2.0.9</version>
         </dependency>
     </dependencies>
 
