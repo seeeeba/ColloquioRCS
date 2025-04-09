@@ -14,25 +14,27 @@ public class InventoryPage {
     private WebDriver driver;
     private Commons commons;
 
-    By pageLogo = By.xpath("//div[@class='app_logo']");
-    By title = By.xpath("//span[@class='title']");
-    By burgerMenu = By.id("react-burger-menu-btn");
-    By cartIcon = By.className("shopping_cart_link");
-    By filterProducts = By.className("product_sort_container");
-    By productCards = By.className("inventory_item");
-    By twitterIcon = By.className("social_twitter");
-    By facebookIcon = By.className("social_facebook");
-    By linkedinIcon = By.className("social_linkedin");
-    By addToCartButton = By.xpath("//*[contains(@id,'add-to-cart')]");
-    By shoppingCartNumber = By.xpath("//span[@class='shopping_cart_badge']");
-    By shoppingCartButton = By.className("shopping_cart_link");
-    By productButtons = By.cssSelector(".inventory_item button");
-    By productImages = By.cssSelector(".inventory_item_img img");
-
     public InventoryPage(WebDriver driver) {
         this.driver = driver;
         this.commons = new Commons(driver, 10);
     }
+
+
+    public static By pageLogo = By.xpath("//div[@class='app_logo']");
+    public static By title = By.xpath("//span[@class='title']");
+    public static By burgerMenu = By.id("react-burger-menu-btn");
+    public static By cartIcon = By.className("shopping_cart_link");
+    public static By filterProducts = By.className("product_sort_container");
+    public static By productCards = By.className("inventory_item");
+    public static By twitterIcon = By.className("social_twitter");
+    public static By facebookIcon = By.className("social_facebook");
+    public static By linkedinIcon = By.className("social_linkedin");
+    public static By addToCartButton = By.xpath("//*[contains(@id,'add-to-cart')]");
+    public static By shoppingCartNumber = By.xpath("//span[@class='shopping_cart_badge']");
+    public static By shoppingCartButton = By.className("shopping_cart_link");
+    public static By productButtons = By.cssSelector(".inventory_item button");
+    public static By productImages = By.cssSelector(".inventory_item_img img");
+
 
     public boolean pageLogo() {
         return commons.isElementVisible(pageLogo);

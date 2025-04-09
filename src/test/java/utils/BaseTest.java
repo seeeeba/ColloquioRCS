@@ -6,9 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import pages.InventoryPage;
-import pages.LoginPage;
-import pages.ShoppingCartPage;
+import pages.*;
 
 import java.time.Duration;
 import java.util.HashMap;
@@ -19,7 +17,10 @@ public abstract class BaseTest {
     protected WebDriver driver;
     protected LoginPage loginPage;
     protected InventoryPage inventoryPage;
+    protected CheckoutPage checkoutPage;
     protected ShoppingCartPage shoppingCartPage;
+    protected OverviewPage overviewPage;
+    protected OrderPage orderPage;
     protected Commons commons;
 
     @BeforeEach
@@ -44,7 +45,10 @@ public abstract class BaseTest {
 
         loginPage = new LoginPage(driver);
         shoppingCartPage = new ShoppingCartPage(driver);
+        checkoutPage = new CheckoutPage(driver);
+        overviewPage = new OverviewPage(driver);
         inventoryPage = new InventoryPage(driver);
+        orderPage = new OrderPage(driver);
         commons = new Commons(driver, 10);
     }
 

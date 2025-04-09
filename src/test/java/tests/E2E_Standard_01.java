@@ -1,5 +1,6 @@
 package tests;
 import org.junit.jupiter.api.Test;
+import pages.CheckoutPage;
 import utils.BaseTest;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -21,7 +22,19 @@ public class E2E_Standard_01 extends BaseTest {
 
         shoppingCartPage.checkCartPage();
 
+        checkoutPage.goToCheckout();
 
+        checkoutPage.checkCheckoutPage();
+
+        checkoutPage.compileCheckoutForm();
+
+        overviewPage.checkOverviewPage();
+
+        overviewPage.checkItemTotalAmount();
+
+        orderPage.goToOrderPage();
+
+        orderPage.checkOrderPage();
     }
 
 }
