@@ -250,7 +250,6 @@ public class InventoryPage {
         for (int i = 0; i < cards.size(); i++) {
             System.out.println("Controllo del prodotto numero " + (i + 1));
 
-            // Ricarico le card in ogni ciclo per evitare stale reference
             cards = driver.findElements(By.className("inventory_item"));
             WebElement card = cards.get(i);
 
@@ -263,11 +262,9 @@ public class InventoryPage {
             System.out.println("Prezzo: " + price);
             System.out.println("Descrizione: " + description);
 
-            // Clicco sul nome per aprire la pagina di dettaglio
             card.findElement(By.className("inventory_item_name")).click();
             commons.waitForMilliseconds(1000);
 
-            // Dati dalla pagina di dettaglio
             String detailName = driver.findElement(By.className("inventory_details_name")).getText();
             String detailPrice = driver.findElement(By.className("inventory_details_price")).getText();
             String detailDescription = driver.findElement(By.className("inventory_details_desc")).getText();
@@ -278,11 +275,34 @@ public class InventoryPage {
                 System.out.println("I dati del prodotto NON coincidono con la pagina di dettaglio.");
             }
 
-            // Torno indietro e ricarico le card
             driver.navigate().back();
             commons.waitForMilliseconds(1000);
         }
 
         System.out.println("Controllo completato per tutte le card.");
     }
+
+    public void checkAboutSection() {
+
+        System.out.println("Apertura del menu laterale.");
+        WebElement burger = driver.findElement(burgerMenu);
+        burger.click();
+        commons.waitForMilliseconds(1000);
+
+        System.out.println("Clic sul link About.");
+        WebElement aboutLink = driver.findElement(By.id("about_sidebar_link"));
+        aboutLink.click();
+        commons.waitForMilliseconds(1500);
+
+        String currentUrl = driver.getCurrentUrl();
+        System.out.println("URL della pagina About: " + currentUrl);
+
+        if (currentUrl.contains("error/404")) {
+            System.out.println("Il link About porta correttamente a una pagina con error 404.");
+        } else {
+            System.out.println("Il link About non porta a una pagina 404.");
+        }
+
+    }
+
 }

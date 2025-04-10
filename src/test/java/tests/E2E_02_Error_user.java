@@ -20,13 +20,15 @@ public class E2E_02_Error_user extends BaseTest {
 
         inventoryPage.removeItemFromCart();
 
+        inventoryPage.checkInventoryCardsDetails();
+
         inventoryPage.goToShoppingCart();
 
         shoppingCartPage.checkCartPage();
 
         checkoutPage.goToCheckout();
 
-        checkoutPage.compileCheckoutError();
+        checkoutPage.compileCheckoutForm();
 
         overviewPage.checkOverviewPage();
 

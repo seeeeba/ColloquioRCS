@@ -115,12 +115,4 @@ public class LoginPage {
         System.out.println("Resettato il login form");
     }
 
-
-    public String getLoginErrorMessage() {
-        return commons.waitForElementVisible(errorMessage).getText();
-    }
-
-    public boolean isErrorVisible() {
-        return commons.waitForElementVisible(errorMessage).isDisplayed();
-    }
 }

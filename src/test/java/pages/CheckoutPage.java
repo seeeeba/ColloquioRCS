@@ -4,6 +4,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import utils.Commons;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -68,44 +70,55 @@ public class CheckoutPage {
         System.out.println("Sezione checkout correttamente visualizzata");
     }
 
-    public void compileCheckoutForm(){
+    public void compileCheckoutForm() {
         WebElement firstName = driver.findElement(firstNameInput);
         firstName.sendKeys("Mario");
         commons.waitForMilliseconds(500);
+
         WebElement lastName = driver.findElement(lastNameInput);
         lastName.sendKeys("Rossi");
         commons.waitForMilliseconds(500);
+
         WebElement postalCode = driver.findElement(postalCodeInput);
         postalCode.sendKeys("12345");
         commons.waitForMilliseconds(500);
 
-        WebElement continueButtonCheckout = driver.findElement(continueButton);
-        continueButtonCheckout.click();
-
-    }
-
-    public void compileCheckoutError(){
-        WebElement firstName = driver.findElement(firstNameInput);
-        firstName.sendKeys("Mario");
-        commons.waitForMilliseconds(500);
-
-        WebElement lastName = driver.findElement(lastNameInput);
-        lastName.sendKeys("Rossi");
-        commons.waitForMilliseconds(500);
+        String firstNameValue = firstName.getAttribute("value");
+        if (firstNameValue == null || firstNameValue.isEmpty()) {
+            System.out.println("Il campo First Name non è stato compilato correttamente.");
+        } else {
+            System.out.println("Il campo First Name è stato compilato con successo: " + firstNameValue);
+        }
 
         String lastNameValue = lastName.getAttribute("value");
         if (lastNameValue == null || lastNameValue.isEmpty()) {
-            System.out.println("Il campo 'Last Name' non è stato compilato correttamente.");
+            System.out.println("Il campo Last Name non è stato compilato correttamente.");
         } else {
-            System.out.println("Il campo 'Last Name' è stato compilato con successo: " + lastNameValue);
+            System.out.println("Il campo Last Name è stato compilato con successo: " + lastNameValue);
         }
 
-        WebElement postalCode = driver.findElement(postalCodeInput);
-        postalCode.sendKeys("12345");
-        commons.waitForMilliseconds(500);
+        String postalCodeValue = postalCode.getAttribute("value");
+        if (postalCodeValue == null || postalCodeValue.isEmpty()) {
+            System.out.println("Il campo Postal Code non è stato compilato correttamente.");
+        } else {
+            System.out.println("Il campo Postal Code è stato compilato con successo: " + postalCodeValue);
+        }
 
         WebElement continueButtonCheckout = driver.findElement(continueButton);
         continueButtonCheckout.click();
+
+        commons.waitForMilliseconds(1000); // Attendi caricamento pagina
+
+        List<WebElement> titles = driver.findElements(By.className("title"));
+        if (!titles.isEmpty()) {
+            String titleText = titles.get(0).getText();
+            if (titleText.equals("Checkout: Overview")) {
+                System.out.println("Navigazione corretta alla pagina Checkout Overview.");
+            } else {
+                System.out.println("Non è stato possibile atterrare sulla pagina Checkout Overview.");
+            }
+        }
+
     }
 
 }
