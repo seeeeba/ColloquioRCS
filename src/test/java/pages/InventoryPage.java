@@ -1,15 +1,11 @@
 package pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import utils.Commons;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.openqa.selenium.support.ui.Select;
 
@@ -303,6 +299,63 @@ public class InventoryPage {
             System.out.println("Il link About non porta a una pagina 404.");
         }
 
+    }
+
+    public void checkFiltersAndPrices() {
+        System.out.println("Controllo funzionalità filtri con verifica coerenza prezzi");
+
+        Map<String, Double> initialData = getProductTitlePriceMap();
+
+        System.out.println("Verifica filtro iniziale: Name (A to Z)");
+        selectFilter("Name (A to Z)");
+        commons.waitForMilliseconds(1500);
+        verifyPriceConsistency(initialData);
+
+        System.out.println("Verifica filtro: Name (Z to A)");
+        selectFilter("Name (Z to A)");
+        commons.waitForMilliseconds(1500);
+        verifyPriceConsistency(initialData);
+
+        System.out.println("Verifica filtro: Price (low to high)");
+        selectFilter("Price (low to high)");
+        commons.waitForMilliseconds(1500);
+        verifyPriceConsistency(initialData);
+
+        System.out.println("Verifica filtro: Price (high to low)");
+        selectFilter("Price (high to low)");
+        commons.waitForMilliseconds(1500);
+        verifyPriceConsistency(initialData);
+
+        System.out.println("Controllo completato.");
+    }
+
+    private Map<String, Double> getProductTitlePriceMap() {
+        Map<String, Double> map = new HashMap<>();
+        List<WebElement> items = driver.findElements(By.className("inventory_item"));
+        for (WebElement item : items) {
+            String title = item.findElement(By.className("inventory_item_name")).getText();
+            String priceText = item.findElement(By.className("inventory_item_price")).getText().replace("$", "").trim();
+            double price = Double.parseDouble(priceText);
+            map.put(title, price);
+        }
+        return map;
+    }
+
+    private void verifyPriceConsistency(Map<String, Double> referenceMap) {
+        List<WebElement> currentItems = driver.findElements(By.className("inventory_item"));
+        for (WebElement item : currentItems) {
+            String title = item.findElement(By.className("inventory_item_name")).getText();
+            String currentPriceText = item.findElement(By.className("inventory_item_price")).getText().replace("$", "").trim();
+            double currentPrice = Double.parseDouble(currentPriceText);
+            if (referenceMap.containsKey(title)) {
+                double expectedPrice = referenceMap.get(title);
+                if (currentPrice != expectedPrice) {
+                    System.out.println("Prezzo non corrispondente per il prodotto " + title + ": atteso " + expectedPrice + ", trovato " + currentPrice);
+                }
+            } else {
+                System.out.println("Nuovo prodotto rilevato dopo il filtro: " + title);
+            }
+        }
     }
 
 }

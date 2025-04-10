@@ -27,11 +27,6 @@ public class ConfigReader {
         return Integer.parseInt(props.getProperty(key));
     }
 
-    public static String getSelectedUser() {
-        String userType = get("user.type");
-        return get("base." + userType + "User");
-    }
-
     public static String getUser(String type) {
         return get("base." + type + "User");
     }

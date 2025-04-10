@@ -52,10 +52,10 @@ public abstract class BaseTest {
         commons = new Commons(driver, 10);
     }
 
-//    @AfterEach
-//    void tearDown() {
-//        if (driver != null) {
-//            driver.quit();
-//        }
-//    }
+    @AfterEach
+    void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
 }

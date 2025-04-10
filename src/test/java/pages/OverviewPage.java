@@ -54,8 +54,8 @@ public class OverviewPage {
         System.out.println("Numero items nel carrello: " + itemCount + " | Numero nel badge: " + badgeCount);
 
         WebElement cancel = driver.findElement(CheckoutPage.cancelButton);
-        assertTrue(cancel.isDisplayed(), "Button Finish non trovato!");
-        System.out.println("Button Finish trovato.");
+        assertTrue(cancel.isDisplayed(), "Button Cancel non trovato!");
+        System.out.println("Button Cancel trovato.");
 
         WebElement finish = driver.findElement(finishButton);
         assertTrue(finish.isDisplayed(), "Button Finish non trovato!");
