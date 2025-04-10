@@ -25,7 +25,7 @@ public class ShoppingCartPage {
 
 
     public void checkCartPage() {
-
+        System.out.println("Controllo sezione carrello");
         WebElement burger = driver.findElement(InventoryPage.burgerMenu);
         assertTrue(burger.isDisplayed(), "Burger menu non trovato!");
         System.out.println("Burger menu trovato.");

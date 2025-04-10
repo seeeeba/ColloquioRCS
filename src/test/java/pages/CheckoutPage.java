@@ -30,7 +30,7 @@ public class CheckoutPage {
     }
 
     public void checkCheckoutPage() {
-
+        System.out.println("Controllo sezione checkout");
         WebElement burger = driver.findElement(InventoryPage.burgerMenu);
         assertTrue(burger.isDisplayed(), "Burger menu non trovato!");
         System.out.println("Burger menu trovato.");
@@ -65,6 +65,7 @@ public class CheckoutPage {
         assertTrue(continueButtonCheckout.isDisplayed(), "Button Continua non trovato!");
         System.out.println("Button Continua trovato.");
 
+        System.out.println("Sezione checkout correttamente visualizzata");
     }
 
     public void compileCheckoutForm(){
@@ -81,7 +82,30 @@ public class CheckoutPage {
         WebElement continueButtonCheckout = driver.findElement(continueButton);
         continueButtonCheckout.click();
 
+    }
 
+    public void compileCheckoutError(){
+        WebElement firstName = driver.findElement(firstNameInput);
+        firstName.sendKeys("Mario");
+        commons.waitForMilliseconds(500);
+
+        WebElement lastName = driver.findElement(lastNameInput);
+        lastName.sendKeys("Rossi");
+        commons.waitForMilliseconds(500);
+
+        String lastNameValue = lastName.getAttribute("value");
+        if (lastNameValue == null || lastNameValue.isEmpty()) {
+            System.out.println("Il campo 'Last Name' non è stato compilato correttamente.");
+        } else {
+            System.out.println("Il campo 'Last Name' è stato compilato con successo: " + lastNameValue);
+        }
+
+        WebElement postalCode = driver.findElement(postalCodeInput);
+        postalCode.sendKeys("12345");
+        commons.waitForMilliseconds(500);
+
+        WebElement continueButtonCheckout = driver.findElement(continueButton);
+        continueButtonCheckout.click();
     }
 
 }

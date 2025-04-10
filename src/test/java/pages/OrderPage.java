@@ -27,7 +27,7 @@ public class OrderPage {
     }
 
     public void checkOrderPage() {
-
+        System.out.println("Controllo sezione riepilogo ordine");
         WebElement burger = driver.findElement(InventoryPage.burgerMenu);
         assertTrue(burger.isDisplayed(), "Burger menu non trovato!");
         System.out.println("Burger menu trovato.");
@@ -57,6 +57,8 @@ public class OrderPage {
         WebElement orderButton = driver.findElement(backHomeButton);
         assertTrue(orderButton.isDisplayed(), "Back home button non trovato!");
         System.out.println("Back home button trovato.");
+
+        System.out.println("Sezione riepilogo ordine correttamente visualizzata");
 
     }
 

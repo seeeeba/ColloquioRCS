@@ -21,7 +21,7 @@ public class OverviewPage {
     public static By finishButton = By.id("finish");
 
     public void checkOverviewPage() {
-
+        System.out.println("Controllo sezione overview");
         WebElement burger = driver.findElement(InventoryPage.burgerMenu);
         assertTrue(burger.isDisplayed(), "Burger menu non trovato!");
         System.out.println("Burger menu trovato.");
@@ -61,9 +61,12 @@ public class OverviewPage {
         assertTrue(finish.isDisplayed(), "Button Finish non trovato!");
         System.out.println("Button Finish trovato.");
 
+        System.out.println("Sezione overview correttamente visualizzata");
     }
 
     public void checkItemTotalAmount() {
+        System.out.println("Controllo prezzo coerente");
+        commons.waitForMilliseconds(1000);
         List<WebElement> priceElements = driver.findElements(By.className("inventory_item_price"));
 
         double sum = 0.0;

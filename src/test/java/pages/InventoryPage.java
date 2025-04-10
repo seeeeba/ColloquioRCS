@@ -1,11 +1,17 @@
 package pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import utils.Commons;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+import org.openqa.selenium.support.ui.Select;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -32,8 +38,6 @@ public class InventoryPage {
     public static By addToCartButton = By.xpath("//*[contains(@id,'add-to-cart')]");
     public static By shoppingCartNumber = By.xpath("//span[@class='shopping_cart_badge']");
     public static By shoppingCartButton = By.className("shopping_cart_link");
-    public static By productButtons = By.cssSelector(".inventory_item button");
-    public static By productImages = By.cssSelector(".inventory_item_img img");
 
 
     public boolean pageLogo() {
@@ -41,7 +45,7 @@ public class InventoryPage {
     }
 
     public void checkProductsPage() {
-
+        System.out.println("Controllo sezione products");
         WebElement burger = driver.findElement(burgerMenu);
         assertTrue(burger.isDisplayed(), "Burger menu non trovato!");
         System.out.println("Burger menu trovato.");
@@ -96,31 +100,189 @@ public class InventoryPage {
         System.out.println("Gli elementi vengono aggiunti correttamente al carrello.");
     }
 
+    public List<String> getProductNames() {
+        List<WebElement> nameElements = driver.findElements(By.className("inventory_item_name"));
+        return nameElements.stream()
+                .map(WebElement::getText)
+                .collect(Collectors.toList());
+    }
+
+    public List<Double> getProductPrices() {
+        List<WebElement> priceElements = driver.findElements(By.className("inventory_item_price"));
+        return priceElements.stream()
+                .map(el -> Double.parseDouble(el.getText().replace("$", "").trim()))
+                .collect(Collectors.toList());
+    }
+
+    public void selectFilter(String visibleText) {
+        Select filterSelect = new Select(driver.findElement(By.className("product_sort_container")));
+        filterSelect.selectByVisibleText(visibleText);
+        commons.waitForMilliseconds(500);
+    }
+
+    public void checkFilterFunctionality(){
+        System.out.println("Avvio controllo funzionalità filtri...");
+
+        System.out.println("Verifica ordinamento iniziale 'Name (A to Z)'");
+        List<String> namesAZ = getProductNames();
+        List<String> expectedAZ = new ArrayList<>(namesAZ);
+        Collections.sort(expectedAZ);
+        if (expectedAZ.equals(namesAZ)) {
+            System.out.println("Ordinamento 'Name (A to Z)' verificato con successo.");
+        } else {
+            System.out.println("Filtro 'Name (A to Z)' non funzionante.");
+        }
+        commons.waitForMilliseconds(1000);
+
+        selectFilter("Name (Z to A)");
+        System.out.println("Verifica ordinamento 'Name (Z to A)'");
+        List<String> namesZA = getProductNames();
+        List<String> expectedZA = new ArrayList<>(namesZA);
+        Collections.sort(expectedZA, Collections.reverseOrder());
+        if (expectedZA.equals(namesZA)) {
+            System.out.println("Ordinamento 'Name (Z to A)' verificato con successo.");
+        } else {
+            System.out.println("Filtro 'Name (Z to A)' non funzionante.");
+        }
+        commons.waitForMilliseconds(1000);
+
+        selectFilter("Price (high to low)");
+        System.out.println("Verifica ordinamento 'Price (high to low)'");
+        List<Double> pricesHighToLow = getProductPrices();
+        List<Double> expectedHighToLow = new ArrayList<>(pricesHighToLow);
+        expectedHighToLow.sort(Collections.reverseOrder());
+        if (expectedHighToLow.equals(pricesHighToLow)) {
+            System.out.println("Ordinamento prezzi da alto a basso verificato con successo.");
+        } else {
+            System.out.println("Filtro 'Price (high to low)' non funzionante.");
+        }
+        commons.waitForMilliseconds(1000);
+
+        selectFilter("Price (low to high)");
+        System.out.println("Verifica ordinamento 'Price (low to high)'");
+        List<Double> pricesLowToHigh = getProductPrices();
+        List<Double> expectedLowToHigh = new ArrayList<>(pricesLowToHigh);
+        Collections.sort(expectedLowToHigh);
+        if (expectedLowToHigh.equals(pricesLowToHigh)) {
+            System.out.println("Ordinamento prezzi da basso ad alto verificato con successo.");
+        } else {
+            System.out.println("Filtro 'Price (low to high)' non funzionante.");
+        }
+        commons.waitForMilliseconds(1000);
+
+        System.out.println("Controllo filtri completato.");
+    }
+
     public void goToShoppingCart() {
         WebElement cartButton = driver.findElement(shoppingCartButton);
         cartButton.click();
     }
 
-    public void clickAddToCartByIndex(int index) {
-        List<WebElement> buttons = driver.findElements(productButtons);
-        commons.waitForElementClickable(productButtons).click();
-        buttons.get(index).click();
+    public void addProductToCartError() {
+        List<WebElement> cards = driver.findElements(By.className("inventory_item"));
+        int countAdded = 0;
+
+        for (int i = 0; i < cards.size(); i++) {
+            WebElement card = cards.get(i);
+            WebElement button = card.findElement(By.xpath(".//button[contains(@id,'add-to-cart')]"));
+            button.click();
+            commons.waitForMilliseconds(300);
+
+            WebElement updatedCard = driver.findElements(By.className("inventory_item")).get(i);
+            WebElement updatedButton = updatedCard.findElement(By.xpath(".//button"));
+            String after = updatedButton.getText();
+
+            if (after.equalsIgnoreCase("Remove")) {
+                countAdded++;
+                System.out.println("Prodotto " + (i + 1) + ": aggiunto correttamente.");
+            } else {
+                System.out.println("Prodotto " + (i + 1) + ": il bottone non è cambiato (rimane '" + after + "').");
+            }
+        }
+
+        int badgeCount = 0;
+        List<WebElement> badgeElements = driver.findElements(By.className("shopping_cart_badge"));
+        if (!badgeElements.isEmpty()) {
+            badgeCount = Integer.parseInt(badgeElements.get(0).getText());
+        }
+
+        System.out.println("Prodotti aggiunti nel carrello: " + countAdded);
+        System.out.println("Numero item del carrello: " + badgeCount);
+
+        assertEquals(countAdded, badgeCount, "Il badge del carrello non corrisponde ai prodotti aggiunti.");
+
+    }
+    public void removeItemFromCart() {
+        List<WebElement> cards = driver.findElements(By.className("inventory_item"));
+        int countRemoved = 0;
+
+        for (int i = 0; i < cards.size(); i++) {
+            WebElement card = driver.findElements(By.className("inventory_item")).get(i);
+            WebElement button = card.findElement(By.xpath(".//button"));
+
+            String text = button.getText();
+            if (!text.equalsIgnoreCase("Remove")) {
+                continue;
+            }
+
+            button.click();
+            commons.waitForMilliseconds(300);
+
+            WebElement updatedCard = driver.findElements(By.className("inventory_item")).get(i);
+            WebElement updatedButton = updatedCard.findElement(By.xpath(".//button"));
+            String after = updatedButton.getText();
+
+            if (after.equalsIgnoreCase("Add to cart")) {
+                countRemoved++;
+                System.out.println("Prodotto " + (i + 1) + ": rimosso correttamente.");
+            } else {
+                System.out.println("Prodotto " + (i + 1) + ": non è stato possibile rimuovere l'item dal carrello.");
+            }
+        }
+
     }
 
-    public void clickRemoveFromCartByIndex(int index) {
-        List<WebElement> buttons = driver.findElements(productButtons);
-        buttons.get(index).click();
-    }
+    public void checkInventoryCardsDetails() {
+        System.out.println("Avvio del controllo di coerenza tra le card dell'inventario e le relative pagine di dettaglio.");
 
-    public String getButtonTextByIndex(int index) {
-        return driver.findElements(productButtons).get(index).getText();
-    }
+        List<WebElement> cards = driver.findElements(By.className("inventory_item"));
 
-    public List<String> getAllImageSources() {
-        return driver.findElements(productImages).stream().map(e -> e.getAttribute("src")).collect(Collectors.toList());
-    }
+        for (int i = 0; i < cards.size(); i++) {
+            System.out.println("Controllo del prodotto numero " + (i + 1));
 
-    public List<Integer> getButtonXPositions() {
-        return driver.findElements(productButtons).stream().map(e -> e.getLocation().getX()).collect(Collectors.toList());
+            // Ricarico le card in ogni ciclo per evitare stale reference
+            cards = driver.findElements(By.className("inventory_item"));
+            WebElement card = cards.get(i);
+
+            String name = card.findElement(By.className("inventory_item_name")).getText();
+            String price = card.findElement(By.className("inventory_item_price")).getText();
+            String description = card.findElement(By.className("inventory_item_desc")).getText();
+
+            System.out.println("Dati letti dalla card:");
+            System.out.println("Nome: " + name);
+            System.out.println("Prezzo: " + price);
+            System.out.println("Descrizione: " + description);
+
+            // Clicco sul nome per aprire la pagina di dettaglio
+            card.findElement(By.className("inventory_item_name")).click();
+            commons.waitForMilliseconds(1000);
+
+            // Dati dalla pagina di dettaglio
+            String detailName = driver.findElement(By.className("inventory_details_name")).getText();
+            String detailPrice = driver.findElement(By.className("inventory_details_price")).getText();
+            String detailDescription = driver.findElement(By.className("inventory_details_desc")).getText();
+
+            if (name.equals(detailName) && price.equals(detailPrice) && description.equals(detailDescription)) {
+                System.out.println("I dati del prodotto coincidono correttamente nella pagina di dettaglio.");
+            } else {
+                System.out.println("I dati del prodotto NON coincidono con la pagina di dettaglio.");
+            }
+
+            // Torno indietro e ricarico le card
+            driver.navigate().back();
+            commons.waitForMilliseconds(1000);
+        }
+
+        System.out.println("Controllo completato per tutte le card.");
     }
 }

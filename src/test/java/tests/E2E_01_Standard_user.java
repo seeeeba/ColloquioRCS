@@ -1,13 +1,14 @@
 package tests;
 import org.junit.jupiter.api.Test;
-import pages.CheckoutPage;
 import utils.BaseTest;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class E2E_Standard_01 extends BaseTest {
+public class E2E_01_Standard_user extends BaseTest {
 
     @Test
     public void testCase_Standard() {
+
+        loginPage.checkLoginPage();
 
         loginPage.login("standard");
         assertTrue(inventoryPage.pageLogo(),"La sezione Inventory non è stata caricata correttamente");
@@ -16,7 +17,15 @@ public class E2E_Standard_01 extends BaseTest {
 
         inventoryPage.checkProductsPage();
 
+        inventoryPage.checkFilterFunctionality();
+
         inventoryPage.addToCartAndCount();
+
+        inventoryPage.removeItemFromCart();
+
+        inventoryPage.addToCartAndCount();
+
+        inventoryPage.checkInventoryCardsDetails();
 
         inventoryPage.goToShoppingCart();
 
