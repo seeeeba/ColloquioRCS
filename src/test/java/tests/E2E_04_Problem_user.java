@@ -33,8 +33,6 @@ public class E2E_04_Problem_user extends BaseTest {
 
         inventoryPage.goToShoppingCart();
 
-        inventoryPage.goToShoppingCart();
-
         shoppingCartPage.checkCartPage();
 
         checkoutPage.goToCheckout();
